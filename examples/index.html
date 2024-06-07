@@ -6,217 +6,216 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Azure Audit Logs</title>
     <style>
-/* Layout styling */
-body {
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    background-color: #f5f5f5;
-}
+        /* Layout styling */
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+        }
 
-.header {
-    background-color: #1c436d;
-    color: white;
-    padding: 20px;
-    text-align: left;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+        .header {
+            background-color: #1c436d;
+            color: white;
+            padding: 20px;
+            text-align: left;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-.header h1 {
-    margin: 0;
-    font-size: 24px;
-}
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
 
-.container {
-    display: flex;
-    height: calc(100vh - 60px);
-}
+        .container {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
 
-.sidebar {
-    width: 20%;
-    background-color: #fff;
-    padding: 20px;
-    border-right: 1px solid #ccc;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    overflow-y: auto;
-}
+        .sidebar {
+            width: 20%;
+            background-color: #fff;
+            padding: 20px;
+            border-right: 1px solid #ccc;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
 
-.filter {
-    margin-bottom: 20px;
-}
+        .filter {
+            margin-bottom: 20px;
+        }
 
-.filter label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
-    color: #333;
-    font-size: 16px;
-}
+        .filter label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
 
-.filter input[type="text"] {
-    width: calc(100% - 20px);
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-size: 14px;
-}
+        .filter input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+        }
 
-.tag-select {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
+        .tag-select {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
 
-.tag-select .tag {
-    display: inline-block;
-    padding: 5px 10px;
-    margin-right: 5px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-    cursor: pointer;
-    background-color: #ddd;
-    transition: background-color 0.3s ease;
-}
+        .tag-select .tag {
+            display: inline-block;
+            padding: 5px 10px;
+            margin-right: 5px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #ddd;
+            transition: background-color 0.3s ease;
+        }
 
-.tag-select .tag.selected {
-    background-color: #007bff;
-    color: #fff;
-}
+        .tag-select .tag.selected {
+            background-color: #007bff;
+            color: #fff;
+        }
 
-.content {
-    width: 80%;
-    padding: 20px;
-    overflow-y: auto;
-}
+        .content {
+            width: 80%;
+            padding: 20px;
+            overflow-y: auto;
+        }
 
-.card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e0e0e0;
-    margin-bottom: 20px;
-    overflow: hidden;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
 
-.card:hover {
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-    transform: translateY(-5px);
-}
+        .card:hover {
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+        }
 
-.card-header {
-    background: #f1f1f1;
-    padding: 20px;
-    border-bottom: 1px solid #ddd;
-}
+        .card-header {
+            background: #f1f1f1;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+        }
 
-.card-header h2 {
-    margin: 0;
-    font-size: 18px;
-    color: #333;
-}
+        .card-header h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
 
-.card-body {
-    padding: 20px;
-}
+        .card-body {
+            padding: 20px;
+        }
 
-.card-footer {
-    background: #f1f1f1;
-    padding: 20px;
-    border-top: 1px solid #ddd;
-}
+        .card-footer {
+            background: #f1f1f1;
+            padding: 20px;
+            border-top: 1px solid #ddd;
+        }
 
-.meta {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-}
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
 
-.meta-item {
-    margin-right: 20px;
-    font-size: 14px;
-    line-height: 1.5;
-}
+        .meta-item {
+            margin-right: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
 
-.meta-title {
-    font-weight: bold;
-    color: #333;
-}
+        .meta-title {
+            font-weight: bold;
+            color: #333;
+        }
 
-.meta-value {
-    color: #555;
-}
+        .meta-value {
+            color: #555;
+        }
 
-.card .tags {
-    margin-top: 10px;
-}
+        .card .tags {
+            margin-top: 10px;
+        }
 
-.card .tag {
-    display: inline-block;
-    padding: 5px 10px;
-    margin-right: 5px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-}
+        .card .tag {
+            display: inline-block;
+            padding: 5px 10px;
+            margin-right: 5px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-.card .tag.azure {
-    background-color: #007bff;
-    color: #fff;
-}
+        .card .tag.azure {
+            background-color: #007bff;
+            color: #fff;
+        }
 
-.card .tag.windows {
-    background-color: #28a745;
-    color: #fff;
-}
+        .card .tag.windows {
+            background-color: #28a745;
+            color: #fff;
+        }
 
-.card .tag.zscaler {
-    background-color: #55418b;
-    color: #fff;
-}
+        .card .tag.zscaler {
+            background-color: #55418b;
+            color: #fff;
+        }
 
-.card .tag.ad_win {
-    background-color: #387e6f;
-    color: #fff;
-}
+        .card .tag.ad_win {
+            background-color: #387e6f;
+            color: #fff;
+        }
 
-.search-container {
-    position: relative;
-    margin-top: 10px;
-}
+        .search-container {
+            position: relative;
+            margin-top: 10px;
+        }
 
-.search-field {
-    width: 99%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-family: monospace;
-}
+        .search-field {
+            width: 99%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+        }
 
-.copy-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-}
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
 
-.copy-btn:active {
-    background-color: #0056b3;
-    /* Darker shade of blue */
-}
+        .copy-btn:active {
+            background-color: #0056b3;
+            /* Darker shade of blue */
+        }
 
-.copy-btn.clicked {
-    background-color: #28a745;
-    /* Green color */
-    color: white;
-}
-
+        .copy-btn.clicked {
+            background-color: #28a745;
+            /* Green color */
+            color: white;
+        }
     </style>
 </head>
 
@@ -380,7 +379,6 @@ body {
             filterCards();
         });
 
-
         function copyContent(event) {
             const button = event.target;
             const textarea = button.previousElementSibling;
@@ -396,13 +394,31 @@ body {
         function filterCards() {
             const selectedTags = Array.from(document.querySelectorAll(".tag.selected")).map(tag => tag.textContent);
             const cards = document.querySelectorAll(".card");
+            const availableTags = new Set();
 
             cards.forEach(card => {
                 const cardTags = card.dataset.tags.split(" ");
-                if (selectedTags.length === 0 || selectedTags.every(tag => cardTags.includes(tag))) {
+                const isCardVisible = selectedTags.length === 0 || selectedTags.every(tag => cardTags.includes(tag));
+
+                if (isCardVisible) {
                     card.style.display = "block";
+                    cardTags.forEach(tag => availableTags.add(tag));
                 } else {
                     card.style.display = "none";
+                }
+            });
+
+            updateAvailableTags(availableTags, selectedTags);
+        }
+
+        function updateAvailableTags(availableTags, selectedTags) {
+            const tagElements = document.querySelectorAll(".tag-select .tag");
+            tagElements.forEach(tagElement => {
+                const tag = tagElement.textContent;
+                if (availableTags.has(tag) || selectedTags.includes(tag)) {
+                    tagElement.style.display = "inline-block";
+                } else {
+                    tagElement.style.display = "none";
                 }
             });
         }
