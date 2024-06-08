@@ -25,7 +25,6 @@ def generate_random_color():
 
 def generate_html(cards):
     tags = {tag for card in cards for tag in card.get("tags", [])}
-    print(type(tags))
     tag_colors = {tag: generate_random_color() for tag in tags}
 
     styles = read_template_file(Path("templates/style.css"))
@@ -54,18 +53,19 @@ def generate_html(cards):
     cards_html = ""
     for card in cards:
         tags = " ".join(card.get("tags", []))
-        tags_html = " ".join(
-            [f'<span class="tag {tag}">{tag}</span>' for tag in card.get("tags", [])]
-        )
+        tags_html = " ".join([f'<span class="tag {tag}">{tag}</span>' for tag in card.get("tags", [])])
+        search = card.get("search")
+        rows = search.count("\n") + 1  # Calculate the number of lines
         card_html = card_template.format(
             name=card.get("name"),
             tags=tags,
             tags_html=tags_html,
             description=card.get("description"),
-            search=card.get("search"),
+            search=search,
+            rows=rows,
             author=card.get("author"),
             last_updated=card.get("last_updated"),
-            version=card.get("version"),
+            version=card.get("version")
         )
         cards_html += card_html
 
