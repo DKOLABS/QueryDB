@@ -24,9 +24,27 @@ def generate_random_color():
     return "#{:06x}".format(random.randint(0, 0xFFFFFF))
 
 
+def calculate_luminance(hex_color):
+    hex_color = hex_color.lstrip('#')
+    r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def is_readable_on_black(hex_color):
+    luminance = calculate_luminance(hex_color)
+    return luminance > 150  # Adjust this threshold as needed
+
+
+def generate_readable_color():
+    while True:
+        color = generate_random_color()
+        if is_readable_on_black(color):
+            return color
+
+
 def generate_html(cards):
     tags = {tag for card in cards for tag in card.get("tags", [])}
-    tag_colors = {tag: generate_random_color() for tag in tags}
+    tag_colors = {tag: generate_readable_color() for tag in tags}
 
     styles = read_template_file(Path("templates/style.css"))
     header_template = read_template_file(Path("templates/header.html"))
@@ -37,7 +55,7 @@ def generate_html(cards):
     css_styles = styles
     for tag, color in tag_colors.items():
         css_styles += f"""
-.card .tag.{tag} {{ background-color: {color}; color: #fff; }}
+.card .tag.{tag} {{ background-color: {color}; color: #000000; }}
         """
 
     tags_js = f"const tags = {list(tags)};"
