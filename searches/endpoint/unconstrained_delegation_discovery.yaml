@@ -10,8 +10,8 @@ search: |-
   | rename Computer as dest 
   | rename UserID as user
 tags:
-  - powershell
   - endpoint
+  - powershell
 mitre:
   - T1018
 references:
