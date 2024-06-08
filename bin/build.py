@@ -1,28 +1,28 @@
-import os
 import yaml
+import random
 from pathlib import Path
 from datetime import datetime
 
 
 def load_yaml_files(directory):
     cards = []
-    for item in Path.rglob("*"):
-        if item.endswith(".yaml") and item.is_file():
+    for item in directory.rglob("*"):
+        if item.is_file():
             with open(item, "r") as file:
                 card = yaml.safe_load(file)
                 cards.append(card)
     return cards
 
 
+def generate_random_color():
+    return "#{:06x}".format(random.randint(0, 0xFFFFFF))
+
+
 def generate_html(cards):
-    header = """
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azure Audit Logs</title>
-    <style>
+    tags = {tag for card in cards for tag in card.get("tags", [])}
+    tag_colors = {tag: generate_random_color() for tag in tags}
+
+    css_styles = """
 /* CSS styles */
 body { margin: 0; font-family: 'Roboto', sans-serif; background-color: #f5f5f5; }
 .header { background-color: #1c436d; color: white; padding: 20px; text-align: left; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
@@ -48,15 +48,27 @@ body { margin: 0; font-family: 'Roboto', sans-serif; background-color: #f5f5f5; 
 .meta-value { color: #555; }
 .card .tags { margin-top: 10px; }
 .card .tag { display: inline-block; padding: 5px 10px; margin-right: 5px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-.card .tag.azure { background-color: #007bff; color: #fff; }
-.card .tag.windows { background-color: #28a745; color: #fff; }
-.card .tag.zscaler { background-color: #55418b; color: #fff; }
-.card .tag.ad_win { background-color: #387e6f; color: #fff; }
 .search-container { position: relative; margin-top: 10px; }
 .search-field { width: 99%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: monospace; }
 .copy-btn { position: absolute; top: 10px; right: 10px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer; }
 .copy-btn:active { background-color: #0056b3; }
 .copy-btn.clicked { background-color: #28a745; color: white; }
+    """
+
+    for tag, color in tag_colors.items():
+        css_styles += f"""
+.card .tag.{tag} {{ background-color: {color}; color: #fff; }}
+        """
+
+    header = f"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Audit Logs</title>
+    <style>
+{css_styles}
     </style>
 </head>
 <body>
@@ -77,81 +89,80 @@ body { margin: 0; font-family: 'Roboto', sans-serif; background-color: #f5f5f5; 
             </div>
         </aside>
         <section class="content" id="content">
-       """
+    """
 
-    footer = """
+    footer = f"""
         </section>
     </main>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const tags = ["azure", "windows", "zscaler", "ad_win", "security", "network", "cloud", "devops", "monitoring", "compliance"];
+        document.addEventListener("DOMContentLoaded", function () {{
+            const tags = {list(tags)};
 
             // Sort the tags array in alphabetical order
             tags.sort();
 
             const tagSelect = document.getElementById("tagSelect");
 
-            tags.forEach(tag => {
+            tags.forEach(tag => {{
                 const tagElement = document.createElement("span");
                 tagElement.classList.add("tag");
                 tagElement.textContent = tag;
-                tagElement.addEventListener("click", () => {
+                tagElement.addEventListener("click", () => {{
                     tagElement.classList.toggle("selected");
                     filterCards();
-                });
+                }});
                 tagSelect.appendChild(tagElement);
-            });
+            }});
 
             filterCards();
-        });
+        }});
 
-
-        function copyContent(event) {
+        function copyContent(event) {{
             const button = event.target;
             const textarea = button.previousElementSibling;
             textarea.select();
             document.execCommand('copy');
 
             button.classList.add('clicked');
-            setTimeout(() => {
+            setTimeout(() => {{
                 button.classList.remove('clicked');
-            }, 2000); // Remove the class after 2 seconds
-        }
+            }}, 2000); // Remove the class after 2 seconds
+        }}
 
-        function filterCards() {
+        function filterCards() {{
             const selectedTags = Array.from(document.querySelectorAll(".tag.selected")).map(tag => tag.textContent);
             const cards = document.querySelectorAll(".card");
 
-            cards.forEach(card => {
+            cards.forEach(card => {{
                 const cardTags = card.dataset.tags.split(" ");
-                if (selectedTags.length === 0 || selectedTags.every(tag => cardTags.includes(tag))) {
+                if (selectedTags.length === 0 || selectedTags.every(tag => cardTags.includes(tag))) {{
                     card.style.display = "block";
-                } else {
+                }} else {{
                     card.style.display = "none";
-                }
-            });
-        }
+                }}
+            }});
+        }}
 
-        function searchCards() {
+        function searchCards() {{
             const input = document.getElementById("searchInput").value.toLowerCase();
             const searchFields = document.querySelectorAll(".search-field");
 
-            searchFields.forEach(field => {
+            searchFields.forEach(field => {{
                 const text = field.textContent.toLowerCase();
                 const card = field.closest('.card');
-                if (card) {
-                    if (text.includes(input)) {
+                if (card) {{
+                    if (text.includes(input)) {{
                         card.style.display = "block";
-                    } else {
+                    }} else {{
                         card.style.display = "none";
-                    }
-                }
-            });
-        }
+                    }}
+                }}
+            }});
+        }}
     </script>
 </body>
 </html>
-       """
+    """
 
     card_template = """
        <article class="card" data-tags="{tags}">
@@ -209,7 +220,7 @@ body { margin: 0; font-family: 'Roboto', sans-serif; background-color: #f5f5f5; 
 
 
 def main():
-    input_directory = "../searches/"
+    input_directory = Path("../searches/")
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     outfile_str = Path(f"../build/index_{timestamp}.html")
     cards = load_yaml_files(input_directory)
