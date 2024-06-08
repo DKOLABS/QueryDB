@@ -12,12 +12,12 @@ document.addEventListener("DOMContentLoaded", function () {
         tagElement.textContent = tag;
         tagElement.addEventListener("click", () => {
             tagElement.classList.toggle("selected");
-            filterCards();
+            filterAndSearchCards();
         });
         tagSelect.appendChild(tagElement);
     });
 
-    filterCards();
+    filterAndSearchCards();
 });
 
 function copyContent(event) {
@@ -32,16 +32,19 @@ function copyContent(event) {
     }, 2000); // Remove the class after 2 seconds
 }
 
-function filterCards() {
+function filterAndSearchCards() {
     const selectedTags = Array.from(document.querySelectorAll(".tag.selected")).map(tag => tag.textContent);
+    const input = document.getElementById("searchInput").value.toLowerCase();
     const cards = document.querySelectorAll(".card");
     const availableTags = new Set();
 
     cards.forEach(card => {
         const cardTags = card.dataset.tags.split(" ");
-        const isCardVisible = selectedTags.length === 0 || selectedTags.every(tag => cardTags.includes(tag));
+        const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => cardTags.includes(tag));
+        const searchField = card.querySelector(".search-field");
+        const matchesSearch = !input || searchField.textContent.toLowerCase().includes(input);
 
-        if (isCardVisible) {
+        if (matchesTags && matchesSearch) {
             card.style.display = "block";
             cardTags.forEach(tag => availableTags.add(tag));
         } else {
@@ -65,18 +68,5 @@ function updateAvailableTags(availableTags, selectedTags) {
 }
 
 function searchCards() {
-    const input = document.getElementById("searchInput").value.toLowerCase();
-    const searchFields = document.querySelectorAll(".search-field");
-
-    searchFields.forEach(field => {
-        const text = field.textContent.toLowerCase();
-        const card = field.closest('.card');
-        if (card) {
-            if (text.includes(input)) {
-                card.style.display = "block";
-            } else {
-                card.style.display = "none";
-            }
-        }
-    });
+    filterAndSearchCards();
 }
