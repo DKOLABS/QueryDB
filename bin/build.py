@@ -94,7 +94,7 @@ def generate_html(cards):
 
 
 def main():
-    input_directory = Path("../searches/")
+    input_directory = Path("../data/")
     # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     timestamp = "test"
     outfile_str = Path(f"../build/index_{timestamp}.html")
