@@ -1,0 +1,19 @@
+name: SPN Enumeration
+id: 5234dec7-2777-42d5-b9f2-867698805399
+author: john.doe@dkolabs.com
+last_updated: '2023-05-22'
+version: 3
+description: This analytic leverages Event Id 4768. A Kerberos authentication ticket (TGT) was requested to identify one source endpoint trying to obtain an unusual number of Kerberos TGT tickets for non-existing users. This behavior could represent an adversary abusing the Kerberos protocol to perform a user enumeration attack against an Active Directory environment. When Kerberos is sent a TGT request with no preauthentication for an invalid username, it responds with KRB5KDC_ERR_C_PRINCIPAL_UNKNOWN or 0x6.
+search: |-
+  index=ad_wim EventCode=4768 Status=0x6 TargetUserName!="*$" 
+  | bucket span=2m _time 
+  | stats dc(TargetUserName) AS unique_accounts values(TargetUserName) as tried_accounts by _time, src_ip 
+  | eventstats avg(unique_accounts) as comp_avg , stdev(unique_accounts) as comp_std by src_ip 
+  | eval upperBound=(comp_avg+comp_std*3) 
+  | eval isOutlier=if(unique_accounts > 10 and unique_accounts >= upperBound, 1, 0) 
+  | search isOutlier=1
+tags:
+  - ad_win
+mitre:
+  - T1589
+  - T1589.002
