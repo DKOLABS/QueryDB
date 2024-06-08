@@ -280,6 +280,14 @@
                             <span class="meta-title">Version:</span>
                             <span class="meta-value">3</span>
                         </div>
+                        <div class="meta-item">
+                            <span class="meta-title">ID:</span>
+                            <span class="meta-value">5234dec7-2777-42d5-b9f2-867698805399</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-title">Source:</span>
+                            <span class="meta-value">searches\endpoint\spn_enumeration.yaml</span>
+                        </div>
                     </div>
                 </footer>
             </article>
@@ -296,7 +304,7 @@
                     <p><strong>Description:</strong> This analytic leverages Event Id 4768...</p>
                     <div class="search-container">
                         <textarea class="search-field" readonly
-                            rows="6">index=azure Category=AuditLogs | eval datetime=strftime(_time, "%Y-%m-%d %H:%M:%S %Z") | table datetime, user, action, result</textarea>
+                            rows="1">index=azure Category=AuditLogs | eval datetime=strftime(_time, "%Y-%m-%d %H:%M:%S %Z") | table datetime, user, action, result</textarea>
                         <button class="copy-btn" onclick="copyContent(event)">Copy</button>
                     </div>
                 </div>
