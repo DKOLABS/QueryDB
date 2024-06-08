@@ -10,6 +10,7 @@ def load_yaml_files(directory):
         if item.is_file():
             with open(item, "r") as file:
                 card = yaml.safe_load(file)
+                card["source"] = "/".join(item.parts[1:])
                 cards.append(card)
     return cards
 
@@ -65,7 +66,9 @@ def generate_html(cards):
             rows=rows,
             author=card.get("author"),
             last_updated=card.get("last_updated"),
-            version=card.get("version")
+            version=card.get("version"),
+            id=card.get("id"),
+            source=card.get("source")
         )
         cards_html += card_html
 
