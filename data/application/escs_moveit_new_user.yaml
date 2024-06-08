@@ -1,0 +1,18 @@
+name: MoveIT - New User Created
+id: 945f1e0b-b191-4f60-9e2a-1ac9b0361014
+version: 1
+created: '2023-02-02'
+last_updated: '2023-02-02'
+author: john.mike@demo.com
+status: testing
+description: MoveIT - New User Created
+search: |-
+  index=moveit Action=new_user
+references:
+correlatin_search_link: splunk-cloud.splunk.com
+use_case_link: jira.cloudjira.com
+tags:
+  - moveit
+mitre:
+  - T101
+  
