@@ -11,7 +11,7 @@ search: |-
   | stats min(_time) AS firstTime max(_time) AS lastTime count values(message_type)
   AS message_type values(src_mac) AS src_mac BY host | `security_content_ctime(firstTime)`|`security_content_ctime(lastTime)`
 tags:
-  - azure
+  - network
 mitre:
   - T1200
   - T1498
