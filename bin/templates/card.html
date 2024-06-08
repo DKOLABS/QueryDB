@@ -1,0 +1,31 @@
+<article class="card" data-tags="{tags}">
+    <header class="card-header">
+        <h2>{name}</h2>
+        <div class="tags">
+            {tags_html}
+        </div>
+    </header>
+    <div class="card-body">
+        <p><strong>Description:</strong> {description}</p>
+        <div class="search-container">
+            <textarea class="search-field" readonly rows="8">{search}</textarea>
+            <button class="copy-btn" onclick="copyContent(event)">Copy</button>
+        </div>
+    </div>
+    <footer class="card-footer">
+        <div class="meta">
+            <div class="meta-item">
+                <span class="meta-title">Author:</span>
+                <span class="meta-value">{author}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-title">Last Updated:</span>
+                <span class="meta-value">{last_updated}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-title">Version:</span>
+                <span class="meta-value">{version}</span>
+            </div>
+        </div>
+    </footer>
+</article>
