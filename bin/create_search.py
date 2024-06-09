@@ -55,11 +55,10 @@ def get_category():
 
 
 def get_current_names_and_ids():
-    data_dir = Path("./data/")
     names = list()
     ids = list()
 
-    for file in data_dir.rglob("*.yaml"):
+    for file in DATA_DIR.rglob("*.yaml"):
         with open(file, "r") as f:
             data = yaml.safe_load(f)
         names.append(data["name"])
@@ -88,6 +87,8 @@ def safe_filename(input_string):
 def main():
     # Load configuration
     config = load_config()
+
+    DATA_DIR.mkdir(exist_ok=True)
 
     names, ids = get_current_names_and_ids()
 
