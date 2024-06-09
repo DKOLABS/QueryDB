@@ -1,0 +1,18 @@
+name: Detect Rogue DHCP Server
+id: 6e1ada88-7a0d-4ac1-92c6-03d354686079
+author: john.doe@dkolabs.com
+last_updated: '2020-08-11'
+version: 1
+description: By enabling DHCP Snooping as a Layer 2 Security measure on the organization's
+  network devices, we will be able to detect unauthorized DHCP servers handing out
+  DHCP leases to devices on the network (Man in the Middle attack).
+search: |-
+  index=network facility="DHCP_SNOOPING" mnemonic="DHCP_SNOOPING_UNTRUSTED_PORT"
+  | stats min(_time) AS firstTime max(_time) AS lastTime count values(message_type)
+  AS message_type values(src_mac) AS src_mac BY host | `security_content_ctime(firstTime)`|`security_content_ctime(lastTime)`
+tags:
+  - network
+mitre:
+  - T1200
+  - T1498
+  - T1557
