@@ -4,24 +4,25 @@ import random
 from pathlib import Path
 
 
-## Tag Color Functions
-
-
+# Function to generate a random hex color
 def generate_random_color():
     return "#{:06x}".format(random.randint(0, 0xFFFFFF))
 
 
+# Function to calculate the luminance of a hex color
 def calculate_luminance(hex_color):
     hex_color = hex_color.lstrip("#")
     r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
     return 0.2126 * r + 0.7152 * g + 0.0722 * b
 
 
+# Function to determine if a color is readable on a black background
 def is_readable_on_black(hex_color):
     luminance = calculate_luminance(hex_color)
     return luminance > 150  # Adjust this threshold as needed
 
 
+# Function to generate a random color that is readable on a black background
 def generate_readable_color():
     while True:
         color = generate_random_color()
@@ -29,105 +30,97 @@ def generate_readable_color():
             return color
 
 
-## HTML Generator Functions
+# Function to load YAML files from a directory, extracting relevant data
+def load_yaml_files(yaml_folder):
+    cards = list()
+    tags = set()
+    card_names = list()
 
-
-def load_yaml_file(filepath):
-    with open(filepath, "r") as file:
-        card = yaml.safe_load(file)
-        card["source"] = "/".join(filepath.parts[1:])
+    for file in yaml_folder.rglob("*.yaml"):
+        with open(file, "r") as file:
+            card = yaml.safe_load(file)
+        card["source"] = file.name.replace("data\\", "")
         card["search_rows"] = card["search"].count("\n") + 1
         card["tags_string"] = " ".join(card["tags"])
-    return card
+        cards.append(card)
+        tags.update(card["tags"])
+        card_names.append(card["name"])
+
+    return cards, tags, sorted(card_names)
 
 
-def write_temp_card(card_data, j2_card_template):
-    temp_dir = Path("./build/temp/")
-    out_file = Path(temp_dir, card_data["id"] + ".html")
-    with open(out_file, "w") as out_file:
-        out_file.write(j2_card_template.render(card_data))
-
-
-def generate_html():
-    pass
-    ## Build Header
-
-    ## Add Cards
-
-    ## Build Footer
-
-    ## Return/Write HTML
-
-def purge_temp():
-    temp_directory = Path("./build/temp/")
-    for file in temp_directory.iterdir():
-        if file.is_file():
-            try:
-                file.unlink()
-            except Exception as e:
-                print(f"Failed to delete {file}: {e}")
-        elif file.is_dir():
-            try:
-                purge_temp(file)
-            except:
-                pass
-
+# Function to render a Jinja2 template with the given context
+def render_template(template_path, context):
+    template_loader = jinja2.FileSystemLoader(searchpath=template_path.parent)
+    template_env = jinja2.Environment(loader=template_loader)
+    template = template_env.get_template(template_path.name)
+    return template.render(context)
 
 
 if __name__ == "__main__":
-    env = jinja2.Environment(
-        loader=jinja2.PackageLoader("build"), trim_blocks=True, lstrip_blocks=True
-    )
 
-    j2_card_template = env.get_template("card_jin.html")
-    j2_header_template = env.get_template("header_jin.html")
-    j2_footer_template = env.get_template("footer_jin.html")
-    data_directory = Path("./data/")
-    card_index = dict()
-    tags = set()
+    # Paths to YAML files and temporary folder
+    yaml_files = Path("./data/")
+    temp_folder = Path("./build/temp/")
 
-    for file in data_directory.rglob("*.yaml"):
-        card_data = load_yaml_file(file)
-        card_index[card_data["name"]] = card_data["id"]
-        tags.update(card_data["tags"])
-        write_temp_card(card_data, j2_card_template)
+    # Paths to Jinja2 templates
+    header_template = Path("./bin/templates/header_jin.html")
+    footer_template = Path("./bin/templates/footer_jin.html")
+    card_template = Path("./bin/templates/card_jin.html")
 
+    ##########################
+    ##### Generate Cards #####
+    ##########################
+
+    # Load cards, tags, and card names from YAML files
+    cards, tags, card_names = load_yaml_files(yaml_files)
+
+    # Generate a readable color for each tag
     tag_colors = {tag: generate_readable_color() for tag in tags}
 
-    ## Header and Style
-    with open("./bin/templates/style.css", "r") as file:
-        styles = file.read()
+    # Generate HTML for each card
+    cards_html = str()
+    for card_name in card_names:
+        card_data = [d for d in cards if d.get("name") == card_name][0]
+        cards_html += render_template(card_template, card_data)
 
-    css_styles = styles
+    ###########################
+    ##### Generate Header #####
+    ###########################
+
+    # Load CSS styles from file
+    with open("./bin/templates/style.css", "r") as file:
+        css_styles = file.read()
+
+    # Add tag styles to CSS
     for tag, color in tag_colors.items():
         css_styles += (
             f".card .tag.{tag} {{ background-color: {color}; color: #000000; }}\n"
         )
 
-    style = {"style": css_styles}
-    header = j2_header_template.render(style)
+    css_styles = {"style": css_styles}
+    header_html = render_template(header_template, css_styles)
 
-    ## Footer
+    ###########################
+    ##### Generate Footer #####
+    ###########################
+
+    # Load JavaScript from file
     with open("./bin/templates/scripts.js", "r") as file:
         scripts = file.read()
+
+    # Add tags to JavaScript
     tags_js = f"const tags = {sorted(tags)};"
     scripts = scripts.replace("const tags = [];", tags_js)
+
     scripts = {"scripts": scripts}
-    
-    footer = j2_footer_template.render(scripts)
-    
-    card_names = sorted(card_index.keys())
+    footer_html = render_template(footer_template, scripts)
 
-    cards_html = str()
+    #######################
+    ##### Create File #####
+    #######################
 
-    for card in card_names:
-        with open(Path("./build/temp", card_index[card] + ".html"), "r") as file:
-            card_html = file.read()
-        cards_html += f"{card_html}\n"
-    
-    html = header + cards_html + footer
+    # Combine header, cards, and footer into a single HTML file
+    html = header_html + cards_html + footer_html
     with open(Path("./build/out.html"), "w") as out_file:
         out_file.write(html)
-    print(html)
-
-    purge_temp()
