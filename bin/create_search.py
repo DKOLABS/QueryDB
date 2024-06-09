@@ -5,7 +5,7 @@ from datetime import datetime
 import configparser
 from pathlib import Path
 
-CONFIG_FILE = "config.ini"
+CONFIG_FILE = Path("./bin/config.ini")
 DATA_DIR = Path("./data/")
 
 
