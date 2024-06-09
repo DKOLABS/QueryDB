@@ -2,9 +2,9 @@
     <header class="card-header">
         <h2>{{ name }}</h2>
         <div class="tags">
-        {% for tag in tags %}
+            {% for tag in tags %}
             <span class="tag {{ tag }}">{{ tag }}</span>
-        {% endfor %}
+            {% endfor %}
         </div>
     </header>
     <div class="card-body">
@@ -13,6 +13,16 @@
             <textarea class="search-field" readonly rows="{{ search_rows }}">{{ search }}</textarea>
             <button class="copy-btn" onclick="copyContent(event)">Copy</button>
         </div>
+        {% if references %}
+        <button class="references-btn" onclick="toggleReferences(this)">References</button>
+        <div class="references">
+            <ul>
+                {% for ref in references %}
+                <li><a href="{{ ref.url }}" target="_blank" rel="noreferrer">{{ ref.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
     </div>
     <footer class="card-footer">
         <div class="meta">

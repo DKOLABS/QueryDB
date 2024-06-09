@@ -32,6 +32,15 @@ function copyContent(event) {
     }, 2000); // Remove the class after 2 seconds
 }
 
+function toggleReferences(button) {
+    const references = button.nextElementSibling;
+    if (references.style.display === "none" || references.style.display === "") {
+        references.style.display = "block";
+    } else {
+        references.style.display = "none";
+    }
+}
+
 function filterAndSearchCards() {
     const selectedTags = Array.from(document.querySelectorAll(".tag.selected")).map(tag => tag.textContent);
     const input = document.getElementById("searchInput").value.toLowerCase();
