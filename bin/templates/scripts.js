@@ -41,8 +41,9 @@ function filterAndSearchCards() {
     cards.forEach(card => {
         const cardTags = card.dataset.tags.split(" ");
         const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => cardTags.includes(tag));
+        const cardName = card.querySelector(".card-header h2").textContent.toLowerCase();
         const searchField = card.querySelector(".search-field");
-        const matchesSearch = !input || searchField.textContent.toLowerCase().includes(input);
+        const matchesSearch = !input || cardName.includes(input) || searchField.textContent.toLowerCase().includes(input);
 
         if (matchesTags && matchesSearch) {
             card.style.display = "block";
