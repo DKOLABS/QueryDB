@@ -1,0 +1,28 @@
+name: Kerberos - User Enumeration
+id: c36f1bb8-ddf7-4865-83ff-0ac4ea18f6e4
+author: dillon
+last_updated: '2024-06-09'
+version: 1
+description: The following analytic leverages Event Id 4768, A Kerberos authentication ticket (TGT) was requested, to identify one source endpoint
+  trying to obtain an unusual number Kerberos TGT ticket for non existing users. This behavior could represent an adversary abusing the Kerberos protocol
+  to perform a user enumeration attack against an Active Directory environment. When Kerberos is sent a TGT request with no preauthentication for
+  an invalid username, it responds with KRB5KDC_ERR_C_PRINCIPAL_UNKNOWN or 0x6. Red teams and adversaries alike may abuse the Kerberos protocol to
+  validate a list of users use them to perform further attacks.\ The detection calculates the standard deviation for each host and leverages the 3-sigma
+  statistical rule to identify an unusual number requests. To customize this analytic, users can try different combinations of the bucket span time
+  and the calculation of the upperBound field.
+search: |-
+  index=ad_win EventCode=4768 Status=0x6 TargetUserName!="*$" 
+  | bucket span=2m _time 
+  | stats dc(TargetUserName) AS unique_accounts values(TargetUserName) as tried_accounts by _time, src_ip 
+  | eventstats avg(unique_accounts) as comp_avg , stdev(unique_accounts) as comp_std by src_ip 
+  | eval upperBound=(comp_avg+comp_std*3) 
+  | eval isOutlier=if(unique_accounts > 10 and unique_accounts >= upperBound, 1, 0) 
+  | search isOutlier=1
+tags:
+- ad_win
+- T1589
+references:
+  - name: Google
+    url: https://www.google.com
+  - name: Example
+    url: https://www.example.com

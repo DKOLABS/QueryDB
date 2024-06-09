@@ -28,3 +28,10 @@ body { margin: 0; font-family: 'Roboto', sans-serif; background-color: #f5f5f5; 
 .copy-btn { position: absolute; top: 10px; right: 10px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer; }
 .copy-btn:active { background-color: #0056b3; }
 .copy-btn.clicked { background-color: #28a745; color: white; }
+.references { display: none; border: none; border-radius: 0 0 4px 4px; margin-top: 0; padding: 0 18px; overflow: hidden; transition: max-height 0.2s ease-out; background-color: #f1f1f1; }
+.references a { display: block; color: #007bff; text-decoration: none; margin: 5px 0; }
+.references a:hover { text-decoration: underline; }
+.references ul { padding-left: 20px;}
+.references li {margin-bottom: 5px;}
+.references-btn { width: 100%; text-align: left; display: block; margin: 10px 0 0 0; padding: 10px; background-color: #c3ced1; color: #000000; font-weight: bold; border: none; border-radius: 4px 4px 4px 4px;; cursor: pointer; }
+.references-btn:active { background-color: #7c7c7c; }
