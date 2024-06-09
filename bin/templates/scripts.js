@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const tags = []; // Placeholder, will be replaced by Python script
+    const tags = [];
 
     // Sort the tags array in alphabetical order
     tags.sort();

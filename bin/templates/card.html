@@ -1,14 +1,16 @@
-<article class="card" data-tags="{tags}">
+<article class="card" data-tags="{{ tags_string }}">
     <header class="card-header">
-        <h2>{name}</h2>
+        <h2>{{ name }}</h2>
         <div class="tags">
-            {tags_html}
+        {% for tag in tags %}
+            <span class="tag {{ tag }}">{{ tag }}</span>
+        {% endfor %}
         </div>
     </header>
     <div class="card-body">
-        <p><strong>Description:</strong> {description}</p>
+        <p><strong>Description:</strong> {{ description }}</p>
         <div class="search-container">
-            <textarea class="search-field" readonly rows="{rows}">{search}</textarea>
+            <textarea class="search-field" readonly rows="{{ search_rows }}">{{ search }}</textarea>
             <button class="copy-btn" onclick="copyContent(event)">Copy</button>
         </div>
     </div>
@@ -16,23 +18,23 @@
         <div class="meta">
             <div class="meta-item">
                 <span class="meta-title">Author:</span>
-                <span class="meta-value">{author}</span>
+                <span class="meta-value">{{ author }}</span>
             </div>
             <div class="meta-item">
                 <span class="meta-title">Last Updated:</span>
-                <span class="meta-value">{last_updated}</span>
+                <span class="meta-value">{{ last_updated }}</span>
             </div>
             <div class="meta-item">
                 <span class="meta-title">Version:</span>
-                <span class="meta-value">{version}</span>
+                <span class="meta-value">{{ version }}</span>
             </div>
             <div class="meta-item">
                 <span class="meta-title">ID:</span>
-                <span class="meta-value">{id}</span>
+                <span class="meta-value">{{ id }}</span>
             </div>
             <div class="meta-item">
                 <span class="meta-title">Source:</span>
-                <span class="meta-value">{source}</span>
+                <span class="meta-value">{{ source }}</span>
             </div>
         </div>
     </footer>
