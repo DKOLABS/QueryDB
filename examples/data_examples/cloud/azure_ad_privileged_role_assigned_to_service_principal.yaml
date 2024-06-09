@@ -21,8 +21,4 @@ search: |-
   | search isprvilegedadrole = True
 tags:
   - azure
-mitre:
-  - T1098
-  - T1098.003
-references:
-- https://posts.specterops.io/azure-privilege-escalation-via-service-principal-abuse-210ae2be2a5
+  - ad_win

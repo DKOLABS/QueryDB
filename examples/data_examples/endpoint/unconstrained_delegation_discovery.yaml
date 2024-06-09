@@ -12,8 +12,3 @@ search: |-
 tags:
   - endpoint
   - powershell
-mitre:
-  - T1018
-references:
-  - https://learn.microsoft.com/en-us/defender-for-identity/security-assessment-unconstrained-kerberos
-  - https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/domain-compromise-via-unrestricted-kerberos-delegation
