@@ -58,6 +58,21 @@ def generate_html():
 
     ## Return/Write HTML
 
+def purge_temp():
+    temp_directory = Path("./build/temp/")
+    for file in temp_directory.iterdir():
+        if file.is_file():
+            try:
+                file.unlink()
+            except Exception as e:
+                print(f"Failed to delete {file}: {e}")
+        elif file.is_dir():
+            try:
+                purge_temp(file)
+            except:
+                pass
+
+
 
 if __name__ == "__main__":
     env = jinja2.Environment(
@@ -114,3 +129,5 @@ if __name__ == "__main__":
     with open(Path("./build/out.html"), "w") as out_file:
         out_file.write(html)
     print(html)
+
+    purge_temp()
