@@ -1,6 +1,10 @@
-<article class="card" data-tags="{{ tags_string }}">
+<article class="card" data-tags="{{ tags_string }}" data-type="{{ type }}">
     <header class="card-header">
         <h2>{{ name }}</h2>
+        <hr class="solid">
+        <div class="type">
+            Type: {{ type }}
+        </div>
         <div class="tags">
             {% for tag in tags %}
             <span class="tag {{ tag }}">{{ tag }}</span>

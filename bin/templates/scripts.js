@@ -17,8 +17,28 @@ document.addEventListener("DOMContentLoaded", function () {
         tagSelect.appendChild(tagElement);
     });
 
+    populateTypeFilter();
     filterAndSearchCards();
 });
+
+function populateTypeFilter() {
+    const typeFilter = document.getElementById("typeFilter");
+    const types = new Set();
+
+    document.querySelectorAll(".card").forEach(card => {
+        const type = card.dataset.type; // Assuming each card has a data-type attribute
+        if (type) {
+            types.add(type);
+        }
+    });
+
+    Array.from(types).sort().forEach(type => {
+        const option = document.createElement("option");
+        option.value = type;
+        option.textContent = type;
+        typeFilter.appendChild(option);
+    });
+}
 
 function copyContent(event) {
     const button = event.target;
@@ -44,6 +64,7 @@ function toggleReferences(button) {
 function filterAndSearchCards() {
     const selectedTags = Array.from(document.querySelectorAll(".tag.selected")).map(tag => tag.textContent);
     const input = document.getElementById("searchInput").value.toLowerCase();
+    const typeFilterValue = document.getElementById("typeFilter").value;
     const cards = document.querySelectorAll(".card");
     const availableTags = new Set();
 
@@ -53,8 +74,9 @@ function filterAndSearchCards() {
         const cardName = card.querySelector(".card-header h2").textContent.toLowerCase();
         const searchField = card.querySelector(".search-field");
         const matchesSearch = !input || cardName.includes(input) || searchField.textContent.toLowerCase().includes(input);
+        const matchesType = typeFilterValue === "All" || card.dataset.type === typeFilterValue;
 
-        if (matchesTags && matchesSearch) {
+        if (matchesTags && matchesSearch && matchesType) {
             card.style.display = "block";
             cardTags.forEach(tag => availableTags.add(tag));
         } else {
