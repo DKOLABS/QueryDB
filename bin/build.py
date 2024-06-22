@@ -42,7 +42,7 @@ def load_yaml_files(yaml_folder):
         with open(file, "r") as file:
             card = yaml.safe_load(file)
         card["source"] = file.name.replace("data\\", "")
-        card["search_rows"] = card["search"].count("\n") + 1
+        # card["search_rows"] = card["search"].count("\n") + 1
         card["tags_string"] = " ".join(card["tags"])
         cards.append(card)
         tags.update(card["tags"])

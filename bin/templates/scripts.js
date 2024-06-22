@@ -21,6 +21,17 @@ document.addEventListener("DOMContentLoaded", function () {
     filterAndSearchCards();
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const textareas = document.querySelectorAll('.search-field');
+    textareas.forEach(textarea => {
+        textarea.style.height = textarea.scrollHeight + 'px';
+        textarea.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    });
+});
+
 function populateTypeFilter() {
     const typeFilter = document.getElementById("typeFilter");
     const types = new Set();

@@ -156,14 +156,18 @@ body {
 .search-container {
     position: relative;
     margin-top: 10px;
+    display: block;
+    height: auto;
 }
 
 .search-field {
-    width: calc(100% - 20px);
+    width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-family: monospace;
+    box-sizing: border-box;
+    resize: vertical;
 }
 
 .copy-btn {

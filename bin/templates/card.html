@@ -14,7 +14,7 @@
     <div class="card-body">
         <p><strong>Description:</strong> {{ description }}</p>
         <div class="search-container">
-            <textarea class="search-field" readonly rows="{{ search_rows }}">{{ search }}</textarea>
+            <textarea class="search-field" readonly>{{ search }}</textarea>
             <button class="copy-btn" onclick="copyContent(event)">Copy</button>
         </div>
         {% if references %}
