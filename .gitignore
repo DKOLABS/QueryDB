@@ -1,6 +1,7 @@
 venv/
 build/
 data/
+scratch/
 .vscode/
 __pycache__
 config.ini
