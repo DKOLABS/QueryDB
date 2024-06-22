@@ -18,8 +18,15 @@
                 <label for="searchInput">Search:</label>
                 <input type="text" id="searchInput" onkeyup="searchCards()" placeholder="Search..." aria-label="Search input">
             </div>
+            <div class="filter">
+                <label for="typeFilter">Type Filter:</label>
+                <select id="typeFilter" onchange="filterAndSearchCards()">
+                    <option value="All">All</option>
+                    <!-- Options will be dynamically inserted here -->
+                </select>
+            </div>
             <div class="tag-filter filter">
-                <label>Filter by Tags:</label>
+                <label>Tag Filter:</label>
                 <div id="tagSelect" class="tag-select">
                     <!-- Tags will be dynamically inserted here -->
                 </div>
