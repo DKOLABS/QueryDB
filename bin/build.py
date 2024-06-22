@@ -42,7 +42,6 @@ def load_yaml_files(yaml_folder):
         with open(file, "r") as file:
             card = yaml.safe_load(file)
         card["source"] = file.name.replace("data\\", "")
-        # card["search_rows"] = card["search"].count("\n") + 1
         card["tags_string"] = " ".join(card["tags"])
         cards.append(card)
         tags.update(card["tags"])
@@ -124,9 +123,8 @@ if __name__ == "__main__":
 
     # Combine header, cards, and footer into a single HTML file
     html = header_html + cards_html + footer_html
-    # with open(Path("./build/out.html"), "w") as out_file:
-    #     out_file.write(html)
 
+    # Write output file
     formatter = formatter.HTMLFormatter(indent=4)
     with open(Path("./build/out_bs.html"), "w") as out_file:
         out_file.write(bs(html, "html.parser").prettify(formatter=formatter))
