@@ -3,6 +3,7 @@ import yaml
 import random
 from pathlib import Path
 from bs4 import BeautifulSoup as bs
+from bs4 import formatter
 
 
 # Function to generate a random hex color
@@ -126,5 +127,6 @@ if __name__ == "__main__":
     # with open(Path("./build/out.html"), "w") as out_file:
     #     out_file.write(html)
 
+    formatter = formatter.HTMLFormatter(indent=4)
     with open(Path("./build/out_bs.html"), "w") as out_file:
-        out_file.write(bs(html, "html.parser").prettify())
+        out_file.write(bs(html, "html.parser").prettify(formatter=formatter))
