@@ -1,6 +1,10 @@
 import uuid
 import yaml
 import re
+import inquirer
+import os
+import subprocess
+import tempfile
 from datetime import datetime
 import configparser
 from pathlib import Path
@@ -9,16 +13,17 @@ CONFIG_FILE = Path("./bin/config.ini")
 DATA_DIR = Path("./data/")
 
 
-def get_user_input(prompt, default=None):
-    if default:
-        prompt = f"{prompt} [{default}]: "
-    return input(prompt) or default
+def clear_screen():
+    os.system("cls" if os.name == "nt" else "clear")
 
 
 def load_config():
-    config = configparser.ConfigParser()
-    if Path(CONFIG_FILE).exists():
+    config = configparser.ConfigParser(allow_no_value=True)
+    if CONFIG_FILE.exists():
         config.read(CONFIG_FILE)
+    else:
+        CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
+        CONFIG_FILE.touch()
     return config
 
 
@@ -27,36 +32,8 @@ def save_config(config):
         config.write(configfile)
 
 
-def list_categories():
-    return [d.name for d in DATA_DIR.iterdir() if d.is_dir()]
-
-
-def get_category():
-    categories = list_categories()
-    print("Select a category:")
-    for i, category in enumerate(categories, start=1):
-        print(f"{i}. {category}")
-    print(f"{len(categories) + 1}. Create a new category")
-
-    try:
-        choice = int(get_user_input("Enter the number of your choice: "))
-    except ValueError:
-        choice = -1
-
-    if 1 <= choice <= len(categories):
-        return categories[choice - 1]
-    elif choice == len(categories) + 1:
-        new_category = get_user_input("Enter the name of the new category: ")
-        (DATA_DIR / new_category).mkdir(parents=True, exist_ok=True)
-        return new_category
-    else:
-        print("\nInvalid choice. Please try again.")
-        return get_category()
-
-
 def get_current_names_and_ids():
-    names = list()
-    ids = list()
+    names, ids = [], []
 
     for file in DATA_DIR.rglob("*.yaml"):
         with open(file, "r") as f:
@@ -68,48 +45,116 @@ def get_current_names_and_ids():
 
 
 def validate_field(field, data_set):
-    if field in data_set:
-        return False
-    else:
-        return True
+    return field not in data_set
 
 
 def safe_filename(input_string):
-    # Replace spaces with underscores
-    safe_name = input_string.replace(" ", "_")
-    # Convert to lowercase
-    safe_name = safe_name.lower()
-    # Remove any characters that are not alphanumeric, underscores, or hyphens
-    safe_name = re.sub(r"[^a-z0-9_-]", "", safe_name)
-    return safe_name
+    return re.sub(r"[^a-z0-9_-]", "", input_string.replace(" ", "_").lower())
+
+
+def get_type(config):
+    if not config.has_section("TYPES"):
+        config.add_section("TYPES")
+
+    types = list(config._sections["TYPES"].keys())
+    types.append("Create new type")
+    question = [
+        inquirer.List(
+            "type",
+            message="Select a type",
+            choices=types,
+        ),
+    ]
+
+    answer = inquirer.prompt(question)
+
+    if answer["type"] == "Create new type":
+        new_type = inquirer.text(message="Enter new type")
+        config["TYPES"][new_type] = None
+        save_config(config)
+        return new_type
+    return answer["type"]
+
+
+def get_directory_path(base_path=DATA_DIR):
+    def list_directories(current_path):
+        directories = [d.name for d in current_path.iterdir() if d.is_dir()]
+        directories.extend(["Select this folder", "Create new folder"])
+        return directories
+
+    current_path = base_path
+
+    while True:
+        clear_screen()
+        directories = list_directories(current_path)
+        questions = [
+            inquirer.List(
+                "directory",
+                message=f"Select a directory under {current_path} or create a new one:",
+                choices=directories,
+            ),
+        ]
+
+        answers = inquirer.prompt(questions)
+        selected_directory = answers["directory"]
+
+        if selected_directory == "Create new folder":
+            new_folder_name = inquirer.text(
+                message="Enter the name of the new folder: "
+            )
+            new_folder_path = current_path / new_folder_name
+            new_folder_path.mkdir(parents=True, exist_ok=True)
+            current_path = new_folder_path
+        elif selected_directory == "Select this folder":
+            break
+        else:
+            current_path = current_path / selected_directory
+
+    return current_path
+
+
+def get_multiline_input():
+    editor = "notepad" if os.name == "nt" else os.getenv("EDITOR", "gedit")
+
+    with tempfile.NamedTemporaryFile(suffix=".tmp", delete=False) as temp_file:
+        temp_file_path = temp_file.name
+
+    subprocess.call([editor, temp_file_path])
+
+    with open(temp_file_path, "r") as temp_file:
+        input_text = temp_file.read()
+
+    os.remove(temp_file_path)
+    return input_text
 
 
 def main():
-    # Load configuration
     config = load_config()
-
     DATA_DIR.mkdir(exist_ok=True)
-
     names, ids = get_current_names_and_ids()
 
     print("\nNew Search Helper Script\n")
 
-    # Get author from config or prompt the user
-    default_author = config.get("DEFAULT", "author", fallback=None)
-    author = get_user_input("Enter the author email: ", default=default_author)
+    questions = [
+        inquirer.Text(
+            "author",
+            message="Enter the author email",
+            default=config.get("DEFAULT", "author", fallback=None),
+        ),
+        inquirer.Text("name", message="Enter the name"),
+        inquirer.Text("description", message="Enter the description"),
+        inquirer.Text("tags", message="Enter the tags (comma-separated)"),
+    ]
 
-    # Collect other user inputs
-    while True:
-        name = get_user_input("Enter the name: ")
-        if validate_field(name, names):
-            break
-        else:
-            print("Name must be unique")
+    answers = inquirer.prompt(questions)
 
-    description = get_user_input("Enter the description: ")
-    category = get_category()
+    while not validate_field(answers["name"], names):
+        print("Name must be unique")
+        answers["name"] = inquirer.text(message="Enter the name")
 
-    # Auto-generate fields
+    search_type = get_type(config)
+    file_dir = get_directory_path()
+
     while True:
         id = str(uuid.uuid4())
         if validate_field(id, ids):
@@ -118,34 +163,34 @@ def main():
     last_updated = datetime.now().strftime("%Y-%m-%d")
     version = 1
 
-    # Tags input as a comma-separated string, converted to a list
-    tags_input = get_user_input("Enter the tags (comma-separated): ")
-    try:
-        tags = [tag.strip() for tag in tags_input.split(",")]
-    except AttributeError:
-        tags = ["none"]
+    tags = (
+        [tag.strip() for tag in answers["tags"].split(",")]
+        if answers["tags"]
+        else ["none"]
+    )
 
-    # Create the data dictionary
+    search = get_multiline_input().replace("\n", "\n  ")
+
     data = {
-        "name": name,
+        "name": answers["name"],
         "id": id,
-        "author": author,
+        "author": answers["author"],
         "last_updated": last_updated,
         "version": version,
-        "description": description,
-        "search": "",
+        "type": search_type,
+        "description": answers["description"],
         "tags": tags,
     }
 
-    # Write to a YAML file in the specified category directory
-    output_file = DATA_DIR / category / str(safe_filename(data["name"]) + ".yaml")
+    output_file = file_dir / f"{safe_filename(data['name'])}.yaml"
     with open(output_file, "w") as file:
         yaml.dump(data, file, default_flow_style=False, sort_keys=False, width=144)
+        file.write("search: |\n  ")
+        file.write(search)
 
     print(f"YAML file '{output_file}' created successfully.")
 
-    # Update and save the config with the latest author
-    config["DEFAULT"] = {"author": author}
+    config["DEFAULT"] = {"author": answers["author"]}
     save_config(config)
 
 
