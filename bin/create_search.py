@@ -18,9 +18,12 @@ def clear_screen():
 
 
 def load_config():
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(allow_no_value=True)
     if CONFIG_FILE.exists():
         config.read(CONFIG_FILE)
+    else:
+        CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
+        CONFIG_FILE.touch()
     return config
 
 
@@ -47,6 +50,30 @@ def validate_field(field, data_set):
 
 def safe_filename(input_string):
     return re.sub(r"[^a-z0-9_-]", "", input_string.replace(" ", "_").lower())
+
+
+def get_type(config):
+    if not config.has_section("TYPES"):
+        config.add_section("TYPES")
+
+    types = list(config._sections["TYPES"].keys())
+    types.append("Create new type")
+    question = [
+        inquirer.List(
+            "type",
+            message="Select a type",
+            choices=types,
+        ),
+    ]
+
+    answer = inquirer.prompt(question)
+
+    if answer["type"] == "Create new type":
+        new_type = inquirer.text(message="Enter new type")
+        config["TYPES"][new_type] = None
+        save_config(config)
+        return new_type
+    return answer["type"]
 
 
 def get_directory_path(base_path=DATA_DIR):
@@ -125,7 +152,8 @@ def main():
         print("Name must be unique")
         answers["name"] = inquirer.text(message="Enter the name")
 
-    category = get_directory_path()
+    search_type = get_type(config)
+    file_dir = get_directory_path()
 
     while True:
         id = str(uuid.uuid4())
@@ -149,11 +177,12 @@ def main():
         "author": answers["author"],
         "last_updated": last_updated,
         "version": version,
+        "type": search_type,
         "description": answers["description"],
         "tags": tags,
     }
 
-    output_file = category / f"{safe_filename(data['name'])}.yaml"
+    output_file = file_dir / f"{safe_filename(data['name'])}.yaml"
     with open(output_file, "w") as file:
         yaml.dump(data, file, default_flow_style=False, sort_keys=False, width=144)
         file.write("search: |\n  ")
