@@ -5,6 +5,8 @@ from pathlib import Path
 from bs4 import BeautifulSoup as bs
 from bs4 import formatter
 
+ROOT_DIR = Path(__file__).parent.parent
+
 
 # Function to generate a random hex color
 def generate_random_color():
@@ -36,18 +38,20 @@ def generate_readable_color():
 def load_yaml_files(yaml_folder):
     cards = list()
     tags = set()
-    card_names = list()
+    card_titles = list()
 
     for file in yaml_folder.rglob("*.yaml"):
         with open(file, "r") as file:
             card = yaml.safe_load(file)
         card["source"] = file.name.replace("data\\", "")
+        if "tags" not in card:
+            card["tags"] = list()
         card["tags_string"] = " ".join(card["tags"])
         cards.append(card)
         tags.update(card["tags"])
-        card_names.append(card["name"])
+        card_titles.append(card["title"])
 
-    return cards, tags, sorted(card_names)
+    return cards, tags, sorted(card_titles)
 
 
 # Function to render a Jinja2 template with the given context
@@ -60,29 +64,32 @@ def render_template(template_path, context):
 
 if __name__ == "__main__":
 
-    # Paths to YAML files and temporary folder
-    yaml_files = Path("./data/")
-    temp_folder = Path("./build/temp/")
+    # Paths to YAML files,temporary and build folder
+    build_file = ROOT_DIR / "build" / "output.html"
+    yaml_files = ROOT_DIR / "input" / "yaml_files"
+    temp_folder = ROOT_DIR / "build" / "temp"
 
     # Paths to Jinja2 templates
-    header_template = Path("./bin/templates/header.html")
-    footer_template = Path("./bin/templates/footer.html")
-    card_template = Path("./bin/templates/card.html")
+    header_template = ROOT_DIR / "templates" / "header.html"
+    footer_template = ROOT_DIR / "templates" / "footer.html"
+    card_template = ROOT_DIR / "templates" / "card.html"
+    script_template = ROOT_DIR / "templates" / "script.js"
+    style_template = ROOT_DIR / "templates" / "style.css"
 
     ##########################
     ##### Generate Cards #####
     ##########################
 
-    # Load cards, tags, and card names from YAML files
-    cards, tags, card_names = load_yaml_files(yaml_files)
+    # Load cards, tags, and card titles from YAML files
+    cards, tags, card_titles = load_yaml_files(yaml_files)
 
     # Generate a readable color for each tag
     tag_colors = {tag: generate_readable_color() for tag in tags}
 
     # Generate HTML for each card
     cards_html = str()
-    for card_name in card_names:
-        card_data = [d for d in cards if d.get("name") == card_name][0]
+    for card_title in card_titles:
+        card_data = [d for d in cards if d.get("title") == card_title][0]
         cards_html += render_template(card_template, card_data)
 
     ###########################
@@ -90,7 +97,7 @@ if __name__ == "__main__":
     ###########################
 
     # Load CSS styles from file
-    with open("./bin/templates/style.css", "r") as file:
+    with open(style_template, "r") as file:
         css_styles = file.read()
 
     # Add tag styles to CSS
@@ -107,7 +114,7 @@ if __name__ == "__main__":
     ###########################
 
     # Load JavaScript from file
-    with open("./bin/templates/scripts.js", "r") as file:
+    with open(script_template, "r") as file:
         scripts = file.read()
 
     # Add tags to JavaScript
@@ -125,6 +132,9 @@ if __name__ == "__main__":
     html = header_html + cards_html + footer_html
 
     # Write output file
+    if build_file.parent.is_dir() is False:
+        build_file.parent.mkdir(parents=True)
+
     formatter = formatter.HTMLFormatter(indent=4)
-    with open(Path("./build/out_bs.html"), "w") as out_file:
+    with open(build_file, "w", encoding="utf-8") as out_file:
         out_file.write(bs(html, "html.parser").prettify(formatter=formatter))

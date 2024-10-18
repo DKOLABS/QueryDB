@@ -1,7 +1,9 @@
 venv/
 build/
 data/
+input/
+output/
 scratch/
 .vscode/
-__pycache__
+__pycache__/
 config.ini
