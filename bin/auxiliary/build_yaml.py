@@ -49,7 +49,7 @@ def normalize_json(input_data):
 
     # API Data
     if "content" in input_data:
-        output_data["title"] = input_data["title"]
+        output_data["title"] = input_data["name"]
         output_data["id"] = input_data["id"]
         output_data["author"] = input_data["author"]
         output_data["updated"] = input_data["updated"]
@@ -63,6 +63,7 @@ def normalize_json(input_data):
         output_data["cron_schedule"] = input_data["content"]["cron_schedule"]
         output_data["earliest_time"] = input_data["content"]["dispatch.earliest_time"]
         output_data["latest_time"] = input_data["content"]["dispatch.latest_time"]
+        output_data["tags"] = parse_tags(input_data["content"]["search"])
     # Manual Data
     else:
         output_data["title"] = input_data["title"]
@@ -90,8 +91,8 @@ if __name__ == "__main__":
     saved_search_template = ROOT_DIR / "templates" / "saved_search.yaml"
 
     # Working Directories
-    json_files = ROOT_DIR / "input" / "json_files"
-    yaml_files = ROOT_DIR / "input" / "yaml_files"
+    json_files = ROOT_DIR / "json_data"
+    yaml_files = ROOT_DIR / "yaml_data"
 
     # Processing
     for file in json_files.iterdir():
