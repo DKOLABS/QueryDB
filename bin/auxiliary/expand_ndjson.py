@@ -27,6 +27,6 @@ def expand_ndjson(ndjson_file, output_dir):
 
 if __name__ == "__main__":
     # Example usage
-    ndjson_file = ROOT_DIR / "input" / "all_searches.json"
-    output_dir = ROOT_DIR / "input" / "json_files"
+    ndjson_file = ROOT_DIR / "data" / "raw" / "all_searches.json"
+    output_dir = ROOT_DIR / "data" / "parsed"
     expand_ndjson(ndjson_file, output_dir)

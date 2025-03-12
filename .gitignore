@@ -7,3 +7,6 @@ scratch/
 .vscode/
 __pycache__/
 config.ini
+yaml_data/
+json_data/
+.DS_Store

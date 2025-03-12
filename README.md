@@ -6,8 +6,8 @@
 
 #### Splunk Searches
 ```
-| rest /services/saved/searches
-| table title, search, owner, eai:acl.app, is_scheduled, cron_schedule
+| rest splunk_server=local count=0 /services/saved/searches
+| fields - auto_summarize.*, dispatch.*, display.*
 ```
 
 #### curl

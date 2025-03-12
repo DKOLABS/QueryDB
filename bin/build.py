@@ -41,10 +41,11 @@ def load_yaml_files(yaml_folder):
     card_titles = list()
 
     for file in yaml_folder.rglob("*.yaml"):
+        print(file.name)
         with open(file, "r") as file:
             card = yaml.safe_load(file)
         card["source"] = file.name.replace("data\\", "")
-        if "tags" not in card:
+        if "tags" not in card or card["tags"] is None:
             card["tags"] = list()
         card["tags_string"] = " ".join(card["tags"])
         cards.append(card)
@@ -66,7 +67,7 @@ if __name__ == "__main__":
 
     # Paths to YAML files,temporary and build folder
     build_file = ROOT_DIR / "build" / "output.html"
-    yaml_files = ROOT_DIR / "input" / "yaml_files"
+    yaml_files = ROOT_DIR / "yaml_data"
     temp_folder = ROOT_DIR / "build" / "temp"
 
     # Paths to Jinja2 templates

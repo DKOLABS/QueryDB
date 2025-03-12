@@ -10,9 +10,8 @@ description: |
 search: |
   {{ search }}
 schedule:
-  cron: {{ cron_schedule }}
+  cron: "{{ cron_schedule }}"
   earliest_time: {{ earliest_time }}
   latest_time: {{ latest_time }}
 tags: {% for tag in tags %}
-- {{ tag }}
-{% endfor %}
+- {{ tag }}{% endfor %}
