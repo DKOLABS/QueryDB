@@ -1,12 +1,13 @@
 import requests
 import json
+import keyring
 from pathlib import Path
 from helper import make_safe_filename
 
 # Configuration
-SPLUNK_HOST = "ENDPOINT"
-USERNAME = "USERNAME"
-PASSWORD = "PASSWORD"
+SPLUNK_HOST = "ENDPOINT:8089"
+USERNAME = keyring.get_password("splunk", "username")
+PASSWORD = keyring.get_password("splunk", "password")
 
 ROOT_DIR = Path(__file__).parent.parent.parent
 OUTPUT_FOLDER = Path(ROOT_DIR / "json_data")
