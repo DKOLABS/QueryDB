@@ -1,10 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
     const tags = [];
+    const indexes = [];
 
-    // Sort the tags array in alphabetical order
+    // Sort the tags and indexes arrays in alphabetical order
     tags.sort();
+    indexes.sort();
 
     const tagSelect = document.getElementById("tagSelect");
+    const indexSelect = document.getElementById("indexSelect");
 
     tags.forEach(tag => {
         const tagElement = document.createElement("span");
@@ -15,6 +18,17 @@ document.addEventListener("DOMContentLoaded", function () {
             filterAndSearchCards();
         });
         tagSelect.appendChild(tagElement);
+    });
+
+    indexes.forEach(index => {
+        const indexElement = document.createElement("span");
+        indexElement.classList.add("index");
+        indexElement.textContent = index;
+        indexElement.addEventListener("click", () => {
+            indexElement.classList.toggle("selected");
+            filterAndSearchCards();
+        });
+        indexSelect.appendChild(indexElement);
     });
 
     populateTypeFilter();
@@ -74,28 +88,34 @@ function toggleReferences(button) {
 
 function filterAndSearchCards() {
     const selectedTags = Array.from(document.querySelectorAll(".tag.selected")).map(tag => tag.textContent);
+    const selectedIndexes = Array.from(document.querySelectorAll(".index.selected")).map(index => index.textContent);
     const input = document.getElementById("searchInput").value.toLowerCase();
     const typeFilterValue = document.getElementById("typeFilter").value;
     const cards = document.querySelectorAll(".card");
     const availableTags = new Set();
+    const availableIndexes = new Set();
 
     cards.forEach(card => {
         const cardTags = card.dataset.tags.split(" ");
+        const cardIndexes = card.dataset.indexes.split(" ");
         const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => cardTags.includes(tag));
+        const matchesIndexes = selectedIndexes.length === 0 || selectedIndexes.every(index => cardIndexes.includes(index));
         const cardName = card.querySelector(".card-header h2").textContent.toLowerCase();
         const searchField = card.querySelector(".search-field");
         const matchesSearch = !input || cardName.includes(input) || searchField.textContent.toLowerCase().includes(input);
         const matchesType = typeFilterValue === "All" || card.dataset.type === typeFilterValue;
 
-        if (matchesTags && matchesSearch && matchesType) {
+        if (matchesTags && matchesIndexes && matchesSearch && matchesType) {
             card.style.display = "block";
             cardTags.forEach(tag => availableTags.add(tag));
+            cardIndexes.forEach(index => availableIndexes.add(index));
         } else {
             card.style.display = "none";
         }
     });
 
     updateAvailableTags(availableTags, selectedTags);
+    updateAvailableIndexes(availableIndexes, selectedIndexes);
 }
 
 function updateAvailableTags(availableTags, selectedTags) {
@@ -106,6 +126,18 @@ function updateAvailableTags(availableTags, selectedTags) {
             tagElement.style.display = "inline-block";
         } else {
             tagElement.style.display = "none";
+        }
+    });
+}
+
+function updateAvailableIndexes(availableIndexes, selectedIndexes) {
+    const indexElements = document.querySelectorAll(".index-select .index");
+    indexElements.forEach(indexElement => {
+        const index = indexElement.textContent;
+        if (availableIndexes.has(index) || selectedIndexes.includes(index)) {
+            indexElement.style.display = "inline-block";
+        } else {
+            indexElement.style.display = "none";
         }
     });
 }

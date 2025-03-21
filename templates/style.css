@@ -76,6 +76,29 @@ body {
     color: #fff;
 }
 
+.index-select {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.index-select .index {
+    display: inline-block;
+    padding: 5px 10px;
+    margin-right: 5px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #ddd;
+    transition: background-color 0.3s ease;
+}
+
+.index-select .index.selected {
+    background-color: #007bff;
+    color: #fff;
+}
+
 .content {
     width: 80%;
     padding: 20px;
@@ -141,10 +164,31 @@ body {
 }
 
 .card .tags {
-    margin-top: 10px;
+    margin: 10px 0;
+    padding: 0px 0px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #3d3c3c;
 }
 
 .card .tag {
+    display: inline-block;
+    padding: 5px 10px;
+    margin-right: 5px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.card .indexes {
+    margin: 10px 0;
+    padding: 0px 0px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #3d3c3c;
+}
+
+.card .index {
     display: inline-block;
     padding: 5px 10px;
     margin-right: 5px;
@@ -239,17 +283,6 @@ body {
 
 .references-btn:active {
     background-color: #7c7c7c;
-}
-
-.card .type {
-    margin: 10px 0;
-    padding: 0px 0px;
-    /* display: inline-block; */
-    font-size: 14px;
-    font-weight: bold;
-    /* background-color: #007bff; */
-    color: #3d3c3c;
-    /* border-radius: 20px; */
 }
 
 hr.solid {

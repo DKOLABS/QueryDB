@@ -1,0 +1,11 @@
+name: Azure - SSPR
+description: |
+  Returns Self Service Password Resets performed via Azure.
+indexes:
+  - azure
+tags:
+  - authentication
+search: |
+  index=azure operationName="Self Service Password Reset"
+  | eval datetime=strftime(_time, "%F %T %Z")
+  | table datetime, user, src_ip, status

@@ -38,6 +38,7 @@ def generate_readable_color():
 def load_yaml_files(yaml_folder):
     cards = list()
     tags = set()
+    indexes = set()
     card_titles = list()
 
     for file in yaml_folder.rglob("*.yaml"):
@@ -45,14 +46,21 @@ def load_yaml_files(yaml_folder):
         with open(file, "r") as file:
             card = yaml.safe_load(file)
         card["source"] = file.name.replace("data\\", "")
+
+        if "indexes" not in card or card["indexes"] is None:
+            card["indexes"] = list()
+        card["indexes_string"] = " ".join(card["indexes"])
+
         if "tags" not in card or card["tags"] is None:
             card["tags"] = list()
         card["tags_string"] = " ".join(card["tags"])
+
         cards.append(card)
         tags.update(card["tags"])
-        card_titles.append(card["title"])
+        indexes.update(card["indexes"])
+        card_titles.append(card["name"])
 
-    return cards, tags, sorted(card_titles)
+    return cards, tags, indexes, sorted(card_titles)
 
 
 # Function to render a Jinja2 template with the given context
@@ -65,9 +73,9 @@ def render_template(template_path, context):
 
 if __name__ == "__main__":
 
-    # Paths to YAML files,temporary and build folder
+    # Paths to YAML files, temporary and build folder
     build_file = ROOT_DIR / "build" / "output.html"
-    yaml_files = ROOT_DIR / "yaml_data"
+    yaml_files = ROOT_DIR / "searches"
     temp_folder = ROOT_DIR / "build" / "temp"
 
     # Paths to Jinja2 templates
@@ -82,15 +90,16 @@ if __name__ == "__main__":
     ##########################
 
     # Load cards, tags, and card titles from YAML files
-    cards, tags, card_titles = load_yaml_files(yaml_files)
+    cards, tags, indexes, card_titles = load_yaml_files(yaml_files)
 
-    # Generate a readable color for each tag
+    # Generate a readable color for each tag and index
     tag_colors = {tag: generate_readable_color() for tag in tags}
+    index_colors = {index: generate_readable_color() for index in indexes}
 
     # Generate HTML for each card
     cards_html = str()
     for card_title in card_titles:
-        card_data = [d for d in cards if d.get("title") == card_title][0]
+        card_data = [d for d in cards if d.get("name") == card_title][0]
         cards_html += render_template(card_template, card_data)
 
     ###########################
@@ -104,7 +113,13 @@ if __name__ == "__main__":
     # Add tag styles to CSS
     for tag, color in tag_colors.items():
         css_styles += (
-            f".card .tag.{tag} {{ background-color: {color}; color: #000000; }}\n"
+            f"\n.card .tag.{tag} {{ background-color: {color}; color: #000000; }}\n"
+        )
+
+    # Add index styles to CSS
+    for index, color in index_colors.items():
+        css_styles += (
+            f".card .index.{index} {{ background-color: {color}; color: #000000; }}\n"
         )
 
     css_styles = {"style": css_styles}
@@ -121,6 +136,10 @@ if __name__ == "__main__":
     # Add tags to JavaScript
     tags_js = f"const tags = {sorted(tags)};"
     scripts = scripts.replace("const tags = [];", tags_js)
+
+    # Add indexes to JavaScript
+    indexes_js = f"const indexes = {sorted(indexes)};"
+    scripts = scripts.replace("const indexes = [];", indexes_js)
 
     scripts = {"scripts": scripts}
     footer_html = render_template(footer_template, scripts)
