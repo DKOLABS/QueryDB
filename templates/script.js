@@ -177,15 +177,24 @@ function copyToClipboard(text) {
 function toggleCollapse(card) {
     const cardBody = card.querySelector('.card-body');
     const cardFooter = card.querySelector('.card-footer');
+    const indexes = card.querySelector('.indexes');
+    const tags = card.querySelector('.tags');
+    const line = card.querySelector('hr.solid');
     const collapseButton = card.querySelector('.collapse-btn');
 
     if (cardBody.style.display === 'none') {
         cardBody.style.display = 'block';
         cardFooter.style.display = 'block';
+        indexes.style.display = 'block';
+        tags.style.display = 'block';
+        line.style.display = 'block';
         collapseButton.textContent = 'Collapse';
     } else {
         cardBody.style.display = 'none';
         cardFooter.style.display = 'none';
+        indexes.style.display = 'none';
+        tags.style.display = 'none';
+        line.style.display = 'none';
         collapseButton.textContent = 'Expand';
     }
 }
