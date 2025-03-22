@@ -1,6 +1,7 @@
 <article class="card" data-tags="{{ tags_string }}" data-indexes="{{ indexes_string }}" data-type="{{ type }}">
     <header class="card-header">
         <h2>{{ name }}</h2>
+        <button class="copy-json-btn" onclick="copyCardContentToJson(this.closest('.card'))">Copy Card</button>
         <hr class="solid">
         <div class="indexes">
             <span>Indexes: </span>
@@ -18,7 +19,7 @@
     <div class="card-body">
         <p><strong>Description:</strong> {{ description }}</p>
         <div class="search-container">
-            <textarea class="search-field" readonly>{{ search }}</textarea>
+            <textarea class="search-field" readonly>{{ search|escape }}</textarea>
             <button class="copy-btn" onclick="copyContent(event)">Copy</button>
         </div>
         {% if references %}
@@ -35,20 +36,12 @@
     <footer class="card-footer">
         <div class="meta">
             <div class="meta-item">
-                <span class="meta-title">Author:</span>
-                <span class="meta-value">{{ author }}</span>
-            </div>
-            <div class="meta-item">
                 <span class="meta-title">Last Updated:</span>
                 <span class="meta-value">{{ last_updated }}</span>
             </div>
             <div class="meta-item">
                 <span class="meta-title">Version:</span>
                 <span class="meta-value">{{ version }}</span>
-            </div>
-            <div class="meta-item">
-                <span class="meta-title">ID:</span>
-                <span class="meta-value">{{ id }}</span>
             </div>
             <div class="meta-item">
                 <span class="meta-title">Source:</span>
