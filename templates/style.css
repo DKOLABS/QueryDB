@@ -253,6 +253,10 @@ body {
     background-color: #0056b3;
 }
 
+.copy-json-btn.clicked {
+    background-color: #28a745; /* Green color */
+}
+
 .references {
     display: none;
     border: none;

@@ -157,7 +157,12 @@ function copyCardContentToJson(card) {
 
     const jsonString = JSON.stringify(cardContent, null, 2);
     copyToClipboard(jsonString);
-    
+
+    const button = card.querySelector(".copy-json-btn");
+    button.classList.add('clicked');
+    setTimeout(() => {
+        button.classList.remove('clicked');
+    }, 2000); // Remove the class after 2 seconds
 }
 
 function copyToClipboard(text) {
