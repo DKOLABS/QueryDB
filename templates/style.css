@@ -11,7 +11,7 @@ body {
     padding: 20px;
     text-align: left;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative; /* Add this line */
+    position: relative;
 }
 
 .header h1 {
@@ -20,9 +20,9 @@ body {
 }
 
 #collapseExpandButton {
-    position: absolute; /* Add this line */
-    top: 20px; /* Adjust as needed */
-    right: 20px; /* Adjust as needed */
+    position: absolute;
+    top: 20px;
+    right: 20px;
     background-color: #007bff;
     color: white;
     border: none;
@@ -258,7 +258,7 @@ body {
 .copy-json-btn {
     position: absolute;
     top: 10px;
-    right: 100px; /* Adjusted to make space for the collapse button */
+    right: 100px;
     background-color: #007bff;
     color: white;
     border: none;
@@ -272,13 +272,13 @@ body {
 }
 
 .copy-json-btn.clicked {
-    background-color: #28a745; /* Green color */
+    background-color: #28a745;
 }
 
 .collapse-btn {
     position: absolute;
     top: 10px;
-    right: 20px; /* Positioned to the right of the copy-json-btn */
+    right: 20px;
     background-color: #007bff;
     color: white;
     border: none;

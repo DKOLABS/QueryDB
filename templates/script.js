@@ -66,7 +66,7 @@ function populateTypeFilter() {
     const types = new Set();
 
     document.querySelectorAll(".card").forEach(card => {
-        const type = card.dataset.type; // Assuming each card has a data-type attribute
+        const type = card.dataset.type;
         if (type) {
             types.add(type);
         }
@@ -89,7 +89,7 @@ function copyContent(event) {
     button.classList.add('clicked');
     setTimeout(() => {
         button.classList.remove('clicked');
-    }, 2000); // Remove the class after 2 seconds
+    }, 2000);
 }
 
 function toggleReferences(button) {
@@ -177,7 +177,7 @@ function copyCardContentToJson(card) {
     button.classList.add('clicked');
     setTimeout(() => {
         button.classList.remove('clicked');
-    }, 2000); // Remove the class after 2 seconds
+    }, 2000);
 }
 
 function copyToClipboard(text) {
