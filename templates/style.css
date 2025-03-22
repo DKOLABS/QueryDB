@@ -122,8 +122,9 @@ body {
 
 .card-header {
     background: #f1f1f1;
-    padding: 20px;
+    padding: 20px 20px 5px 20px;
     border-bottom: 1px solid #ddd;
+    position: relative;
 }
 
 .card-header h2 {
@@ -133,7 +134,7 @@ body {
 }
 
 .card-body {
-    padding: 20px;
+    padding: 5px 20px 20px 20px;
 }
 
 .card-footer {
@@ -234,6 +235,26 @@ body {
 .copy-btn.clicked {
     background-color: #28a745;
     color: white;
+}
+
+.copy-json-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.copy-json-btn:hover {
+    background-color: #0056b3;
+}
+
+.copy-json-btn.clicked {
+    background-color: #28a745; /* Green color */
 }
 
 .references {
