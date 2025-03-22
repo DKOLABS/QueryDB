@@ -145,3 +145,26 @@ function updateAvailableIndexes(availableIndexes, selectedIndexes) {
 function searchCards() {
     filterAndSearchCards();
 }
+
+function copyCardContentToJson(card) {
+    const cardContent = {
+        name: card.querySelector(".card-header h2").textContent.trim().replace(/\n/g, ""),
+        search: card.querySelector(".search-field").textContent.trim(),
+        tags: card.dataset.tags.split(" "),
+        indexes: card.dataset.indexes.split(" "),
+        type: card.dataset.type
+    };
+
+    const jsonString = JSON.stringify(cardContent, null, 2);
+    copyToClipboard(jsonString);
+    
+}
+
+function copyToClipboard(text) {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+}
