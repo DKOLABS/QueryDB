@@ -1,16 +1,29 @@
+/* Variables */
+:root {
+    --primary-color: #007bff;
+    --primary-color-dark: #0056b3;
+    --secondary-color: #1c436d;
+    --background-color: #f5f5f5;
+    --text-color: #333333;
+    --border-color: #cccccc;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --box-shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
 /* CSS styles */
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: #f5f5f5;
+    background-color: var(--background-color);
 }
 
+/* Header */
 .header {
-    background-color: #1c436d;
+    background-color: var(--secondary-color);
     color: white;
     padding: 20px;
     text-align: left;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow);
     position: relative;
 }
 
@@ -19,11 +32,17 @@ body {
     font-size: 24px;
 }
 
+hr.solid {
+    border-top: 1px solid #adadad;
+    border-radius: 5px;
+}
+
+/* Buttons */
 #collapseExpandButton {
     position: absolute;
     top: 20px;
     right: 20px;
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -36,6 +55,64 @@ body {
     background-color: #0056b3;
 }
 
+.copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.copy-btn:active {
+    background-color: #0056b3;
+}
+
+.copy-btn.clicked {
+    background-color: #28a745;
+    color: white;
+}
+
+.copy-json-btn {
+    position: absolute;
+    top: 10px;
+    right: 100px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.copy-json-btn:hover {
+    background-color: #0056b3;
+}
+
+.copy-json-btn.clicked {
+    background-color: #28a745;
+}
+
+.collapse-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.collapse-btn:hover {
+    background-color: #0056b3;
+}
+
 .container {
     display: flex;
     height: calc(100vh - 60px);
@@ -45,9 +122,26 @@ body {
     width: 20%;
     background-color: #fff;
     padding: 20px;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid var(--border-color);
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
+}
+
+.search-container {
+    position: relative;
+    margin-top: 10px;
+    display: block;
+    height: auto;
+}
+
+.search-field {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: monospace;
+    box-sizing: border-box;
+    resize: vertical;
 }
 
 .filter {
@@ -58,7 +152,7 @@ body {
     display: block;
     margin-bottom: 10px;
     font-weight: bold;
-    color: #333;
+    color: var(--text-color);
     font-size: 16px;
 }
 
@@ -66,7 +160,7 @@ body {
     width: calc(100% - 20px);
     padding: 10px;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
     font-size: 14px;
 }
@@ -90,7 +184,7 @@ body {
 }
 
 .tag-select .tag.selected {
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: #fff;
 }
 
@@ -113,7 +207,7 @@ body {
 }
 
 .index-select .index.selected {
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: #fff;
 }
 
@@ -123,6 +217,7 @@ body {
     overflow-y: auto;
 }
 
+/* Cards */
 .card {
     background: #fff;
     border-radius: 12px;
@@ -134,7 +229,7 @@ body {
 }
 
 .card:hover {
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--box-shadow-hover);
     transform: translateY(-5px);
 }
 
@@ -148,7 +243,7 @@ body {
 .card-header h2 {
     margin: 0;
     font-size: 18px;
-    color: #333;
+    color: var(--text-color);
 }
 
 .card-body {
@@ -159,27 +254,6 @@ body {
     background: #f1f1f1;
     padding: 20px 20px 10px 20px;
     border-top: 1px solid #ddd;
-}
-
-.meta {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-}
-
-.meta-item {
-    margin-right: 20px;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.meta-title {
-    font-weight: bold;
-    color: #333;
-}
-
-.meta-value {
-    color: #555;
 }
 
 .card .tags {
@@ -216,81 +290,28 @@ body {
     font-weight: bold;
 }
 
-.search-container {
-    position: relative;
-    margin-top: 10px;
-    display: block;
-    height: auto;
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
 }
 
-.search-field {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-family: monospace;
-    box-sizing: border-box;
-    resize: vertical;
+.meta-item {
+    margin-right: 20px;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
-.copy-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.meta-title {
+    font-weight: bold;
+    color: var(--text-color);
 }
 
-.copy-btn:active {
-    background-color: #0056b3;
+.meta-value {
+    color: #555;
 }
 
-.copy-btn.clicked {
-    background-color: #28a745;
-    color: white;
-}
-
-.copy-json-btn {
-    position: absolute;
-    top: 10px;
-    right: 100px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 3px;
-}
-
-.copy-json-btn:hover {
-    background-color: #0056b3;
-}
-
-.copy-json-btn.clicked {
-    background-color: #28a745;
-}
-
-.collapse-btn {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 3px;
-}
-
-.collapse-btn:hover {
-    background-color: #0056b3;
-}
-
+/* References */
 .references {
     display: none;
     border: none;
@@ -304,7 +325,7 @@ body {
 
 .references a {
     display: block;
-    color: #007bff;
+    color: var(--primary-color);
     text-decoration: none;
     margin: 5px 0;
 }
@@ -338,9 +359,4 @@ body {
 
 .references-btn:active {
     background-color: #7c7c7c;
-}
-
-hr.solid {
-    border-top: 1px solid #adadad;
-    border-radius: 5px;
 }

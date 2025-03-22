@@ -1,4 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
+    initializeTagsAndIndexes();
+    initializeTextareas();
+    initializeCollapseExpandButton();
+    populateTypeFilter();
+    filterAndSearchCards();
+
+    // Add event listener to the search input field
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) {
+        searchInput.addEventListener("input", filterAndSearchCards);
+    }
+});
+
+function initializeTagsAndIndexes() {
     const tags = [];
     const indexes = [];
 
@@ -10,32 +24,39 @@ document.addEventListener("DOMContentLoaded", function () {
     const indexSelect = document.getElementById("indexSelect");
 
     tags.forEach(tag => {
-        const tagElement = document.createElement("span");
-        tagElement.classList.add("tag");
-        tagElement.textContent = tag;
-        tagElement.addEventListener("click", () => {
-            tagElement.classList.toggle("selected");
-            filterAndSearchCards();
-        });
+        const tagElement = createTagElement(tag);
         tagSelect.appendChild(tagElement);
     });
 
     indexes.forEach(index => {
-        const indexElement = document.createElement("span");
-        indexElement.classList.add("index");
-        indexElement.textContent = index;
-        indexElement.addEventListener("click", () => {
-            indexElement.classList.toggle("selected");
-            filterAndSearchCards();
-        });
+        const indexElement = createIndexElement(index);
         indexSelect.appendChild(indexElement);
     });
+}
 
-    populateTypeFilter();
-    filterAndSearchCards();
-});
+function createTagElement(tag) {
+    const tagElement = document.createElement("span");
+    tagElement.classList.add("tag");
+    tagElement.textContent = tag;
+    tagElement.addEventListener("click", () => {
+        tagElement.classList.toggle("selected");
+        filterAndSearchCards();
+    });
+    return tagElement;
+}
 
-document.addEventListener("DOMContentLoaded", function () {
+function createIndexElement(index) {
+    const indexElement = document.createElement("span");
+    indexElement.classList.add("index");
+    indexElement.textContent = index;
+    indexElement.addEventListener("click", () => {
+        indexElement.classList.toggle("selected");
+        filterAndSearchCards();
+    });
+    return indexElement;
+}
+
+function initializeTextareas() {
     const textareas = document.querySelectorAll('.search-field');
     textareas.forEach(textarea => {
         textarea.style.height = textarea.scrollHeight + 'px';
@@ -44,9 +65,9 @@ document.addEventListener("DOMContentLoaded", function () {
             this.style.height = this.scrollHeight + 'px';
         });
     });
-});
+}
 
-document.addEventListener("DOMContentLoaded", function () {
+function initializeCollapseExpandButton() {
     const button = document.getElementById('collapseExpandButton');
     const cards = document.querySelectorAll('.card');
     let allCollapsed = true;
@@ -59,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     button.textContent = allCollapsed ? 'Expand All' : 'Collapse All';
-});
+}
 
 function populateTypeFilter() {
     const typeFilter = document.getElementById("typeFilter");
@@ -80,27 +101,6 @@ function populateTypeFilter() {
     });
 }
 
-function copyContent(event) {
-    const button = event.target;
-    const textarea = button.previousElementSibling;
-    textarea.select();
-    document.execCommand('copy');
-
-    button.classList.add('clicked');
-    setTimeout(() => {
-        button.classList.remove('clicked');
-    }, 2000);
-}
-
-function toggleReferences(button) {
-    const references = button.nextElementSibling;
-    if (references.style.display === "none" || references.style.display === "") {
-        references.style.display = "block";
-    } else {
-        references.style.display = "none";
-    }
-}
-
 function filterAndSearchCards() {
     const selectedTags = Array.from(document.querySelectorAll(".tag.selected")).map(tag => tag.textContent);
     const selectedIndexes = Array.from(document.querySelectorAll(".index.selected")).map(index => index.textContent);
@@ -117,7 +117,7 @@ function filterAndSearchCards() {
         const matchesIndexes = selectedIndexes.length === 0 || selectedIndexes.every(index => cardIndexes.includes(index));
         const cardName = card.querySelector(".card-header h2").textContent.toLowerCase();
         const searchField = card.querySelector(".search-field");
-        const matchesSearch = !input || cardName.includes(input) || searchField.textContent.toLowerCase().includes(input);
+        const matchesSearch = !input || cardName.includes(input) || searchField.value.toLowerCase().includes(input);
         const matchesType = typeFilterValue === "All" || card.dataset.type === typeFilterValue;
 
         if (matchesTags && matchesIndexes && matchesSearch && matchesType) {
@@ -157,8 +157,25 @@ function updateAvailableIndexes(availableIndexes, selectedIndexes) {
     });
 }
 
-function searchCards() {
-    filterAndSearchCards();
+function copyContent(event) {
+    const button = event.target;
+    const textarea = button.previousElementSibling;
+    textarea.select();
+    document.execCommand('copy');
+
+    button.classList.add('clicked');
+    setTimeout(() => {
+        button.classList.remove('clicked');
+    }, 2000);
+}
+
+function toggleReferences(button) {
+    const references = button.nextElementSibling;
+    if (references.style.display === "none" || references.style.display === "") {
+        references.style.display = "block";
+    } else {
+        references.style.display = "none";
+    }
 }
 
 function copyCardContentToJson(card) {
