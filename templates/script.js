@@ -46,6 +46,21 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const button = document.getElementById('collapseExpandButton');
+    const cards = document.querySelectorAll('.card');
+    let allCollapsed = true;
+
+    cards.forEach(card => {
+        const cardBody = card.querySelector('.card-body');
+        if (cardBody.style.display !== 'none') {
+            allCollapsed = false;
+        }
+    });
+
+    button.textContent = allCollapsed ? 'Expand All' : 'Collapse All';
+});
+
 function populateTypeFilter() {
     const typeFilter = document.getElementById("typeFilter");
     const types = new Set();
@@ -197,4 +212,37 @@ function toggleCollapse(card) {
         line.style.display = 'none';
         collapseButton.textContent = 'Expand';
     }
+}
+
+function toggleCollapseExpandAll() {
+    const cards = document.querySelectorAll('.card');
+    const button = document.getElementById('collapseExpandButton');
+    const isCollapsed = button.textContent === 'Collapse All';
+
+    cards.forEach(card => {
+        const cardBody = card.querySelector('.card-body');
+        const cardFooter = card.querySelector('.card-footer');
+        const indexes = card.querySelector('.indexes');
+        const tags = card.querySelector('.tags');
+        const line = card.querySelector('hr.solid');
+        const collapseButton = card.querySelector('.collapse-btn');
+
+        if (isCollapsed) {
+            cardBody.style.display = 'none';
+            cardFooter.style.display = 'none';
+            indexes.style.display = 'none';
+            tags.style.display = 'none';
+            line.style.display = 'none';
+            if (collapseButton) collapseButton.textContent = 'Expand';
+        } else {
+            cardBody.style.display = 'block';
+            cardFooter.style.display = 'block';
+            indexes.style.display = 'block';
+            tags.style.display = 'block';
+            line.style.display = 'block';
+            if (collapseButton) collapseButton.textContent = 'Collapse';
+        }
+    });
+
+    button.textContent = isCollapsed ? 'Expand All' : 'Collapse All';
 }
