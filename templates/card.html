@@ -2,9 +2,10 @@
     <header class="card-header">
         <h2>{{ name }}</h2>
         <button class="copy-json-btn" onclick="copyCardContentToJson(this.closest('.card'))">Copy Card</button>
+        <button class="collapse-btn" onclick="toggleCollapse(this.closest('.card'))">Collapse</button>
         <hr class="solid">
         <div class="indexes">
-            <span>Indexes: </span>
+            <span>{% if indexes|length == 1 %}Index{% else %}Indexes{% endif %}: </span>
             {% for index in indexes %}
             <span class="index {{ index }}">{{ index }}</span>
             {% endfor %}
@@ -35,6 +36,10 @@
     </div>
     <footer class="card-footer">
         <div class="meta">
+            <div class="meta-item">
+                <span class="meta-title">Type:</span>
+                <span class="meta-value">{{ type }}</span>
+            </div>
             <div class="meta-item">
                 <span class="meta-title">Last Updated:</span>
                 <span class="meta-value">{{ last_updated }}</span>

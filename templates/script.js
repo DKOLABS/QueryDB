@@ -46,12 +46,27 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const button = document.getElementById('collapseExpandButton');
+    const cards = document.querySelectorAll('.card');
+    let allCollapsed = true;
+
+    cards.forEach(card => {
+        const cardBody = card.querySelector('.card-body');
+        if (cardBody.style.display !== 'none') {
+            allCollapsed = false;
+        }
+    });
+
+    button.textContent = allCollapsed ? 'Expand All' : 'Collapse All';
+});
+
 function populateTypeFilter() {
     const typeFilter = document.getElementById("typeFilter");
     const types = new Set();
 
     document.querySelectorAll(".card").forEach(card => {
-        const type = card.dataset.type; // Assuming each card has a data-type attribute
+        const type = card.dataset.type;
         if (type) {
             types.add(type);
         }
@@ -74,7 +89,7 @@ function copyContent(event) {
     button.classList.add('clicked');
     setTimeout(() => {
         button.classList.remove('clicked');
-    }, 2000); // Remove the class after 2 seconds
+    }, 2000);
 }
 
 function toggleReferences(button) {
@@ -162,7 +177,7 @@ function copyCardContentToJson(card) {
     button.classList.add('clicked');
     setTimeout(() => {
         button.classList.remove('clicked');
-    }, 2000); // Remove the class after 2 seconds
+    }, 2000);
 }
 
 function copyToClipboard(text) {
@@ -172,4 +187,62 @@ function copyToClipboard(text) {
     textarea.select();
     document.execCommand("copy");
     document.body.removeChild(textarea);
+}
+
+function toggleCollapse(card) {
+    const cardBody = card.querySelector('.card-body');
+    const cardFooter = card.querySelector('.card-footer');
+    const indexes = card.querySelector('.indexes');
+    const tags = card.querySelector('.tags');
+    const line = card.querySelector('hr.solid');
+    const collapseButton = card.querySelector('.collapse-btn');
+
+    if (cardBody.style.display === 'none') {
+        cardBody.style.display = 'block';
+        cardFooter.style.display = 'block';
+        indexes.style.display = 'block';
+        tags.style.display = 'block';
+        line.style.display = 'block';
+        collapseButton.textContent = 'Collapse';
+    } else {
+        cardBody.style.display = 'none';
+        cardFooter.style.display = 'none';
+        indexes.style.display = 'none';
+        tags.style.display = 'none';
+        line.style.display = 'none';
+        collapseButton.textContent = 'Expand';
+    }
+}
+
+function toggleCollapseExpandAll() {
+    const cards = document.querySelectorAll('.card');
+    const button = document.getElementById('collapseExpandButton');
+    const isCollapsed = button.textContent === 'Collapse All';
+
+    cards.forEach(card => {
+        const cardBody = card.querySelector('.card-body');
+        const cardFooter = card.querySelector('.card-footer');
+        const indexes = card.querySelector('.indexes');
+        const tags = card.querySelector('.tags');
+        const line = card.querySelector('hr.solid');
+        const collapseButton = card.querySelector('.collapse-btn');
+
+        if (isCollapsed) {
+            cardBody.style.display = 'none';
+            cardFooter.style.display = 'none';
+            indexes.style.display = 'none';
+            tags.style.display = 'none';
+            line.style.display = 'none';
+            if (collapseButton) collapseButton.textContent = 'Expand';
+        } else {
+            cardBody.style.display = 'block';
+            cardFooter.style.display = 'block';
+            indexes.style.display = 'block';
+            tags.style.display = 'block';
+            line.style.display = 'block';
+            if (collapseButton) collapseButton.textContent = 'Collapse';
+        }
+    });
+
+    button.textContent = isCollapsed ? 'Expand All' : 'Collapse All';
 }
