@@ -173,3 +173,19 @@ function copyToClipboard(text) {
     document.execCommand("copy");
     document.body.removeChild(textarea);
 }
+
+function toggleCollapse(card) {
+    const cardBody = card.querySelector('.card-body');
+    const cardFooter = card.querySelector('.card-footer');
+    const collapseButton = card.querySelector('.collapse-btn');
+
+    if (cardBody.style.display === 'none') {
+        cardBody.style.display = 'block';
+        cardFooter.style.display = 'block';
+        collapseButton.textContent = 'Collapse';
+    } else {
+        cardBody.style.display = 'none';
+        cardFooter.style.display = 'none';
+        collapseButton.textContent = 'Expand';
+    }
+}
