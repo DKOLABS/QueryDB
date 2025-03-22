@@ -1,6 +1,8 @@
 name: Azure - SSPR
 description: |
   Returns Self Service Password Resets performed via Azure.
+last_updated: 2021-06-01
+version: 1.0
 indexes:
   - azure
 tags:
