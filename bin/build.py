@@ -45,7 +45,7 @@ def load_yaml_files(yaml_folder):
         print(file.name)
         with open(file, "r") as file:
             card = yaml.safe_load(file)
-        card["source"] = file.name.replace("data\\", "")
+        card["source"] = file.name
 
         if "indexes" not in card or card["indexes"] is None:
             card["indexes"] = list()
