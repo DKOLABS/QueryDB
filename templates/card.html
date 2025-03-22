@@ -4,7 +4,7 @@
         <button class="copy-json-btn" onclick="copyCardContentToJson(this.closest('.card'))">Copy Card</button>
         <hr class="solid">
         <div class="indexes">
-            <span>Indexes: </span>
+            <span>{% if indexes|length == 1 %}Index{% else %}Indexes{% endif %}: </span>
             {% for index in indexes %}
             <span class="index {{ index }}">{{ index }}</span>
             {% endfor %}

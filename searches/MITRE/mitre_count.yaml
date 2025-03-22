@@ -3,6 +3,7 @@ description: |
   Test
 indexes:
   - None
+  - sseanalytics
 tags:
   - None
 search: |
