@@ -1,4 +1,4 @@
-<article class="card" data-tags="{{ tags_string }}" data-indexes="{{ indexes_string }}" data-type="{{ type }}">
+<article class="card" data-tags='{{ tags|tojson }}' data-indexes='{{ indexes|tojson }}' data-type="{{ type }}">
     <header class="card-header">
         <h2>{{ name }}</h2>
         <button class="copy-json-btn" onclick="copyCardContentToJson(this.closest('.card'))">Copy Card</button>
@@ -6,14 +6,14 @@
         <hr class="solid">
         <div class="indexes">
             <span>{% if indexes|length == 1 %}Index{% else %}Indexes{% endif %}: </span>
-            {% for index in indexes %}
-            <span class="index {{ index }}">{{ index }}</span>
+            {% for item in index_items %}
+            <span class="index {{ item.slug }}">{{ item.label }}</span>
             {% endfor %}
         </div>
         <div class="tags">
             <span>Tags: </span>
-            {% for tag in tags %}
-            <span class="tag {{ tag }}">{{ tag }}</span>
+            {% for item in tag_items %}
+            <span class="tag {{ item.slug }}">{{ item.label }}</span>
             {% endfor %}
         </div>
     </header>
@@ -42,11 +42,11 @@
             </div>
             <div class="meta-item">
                 <span class="meta-title">Last Updated:</span>
-                <span class="meta-value">{{ last_updated }}</span>
+                <span class="meta-value">{{ last_updated|default('') }}</span>
             </div>
             <div class="meta-item">
                 <span class="meta-title">Version:</span>
-                <span class="meta-value">{{ version }}</span>
+                <span class="meta-value">{{ version|default('') }}</span>
             </div>
             <div class="meta-item">
                 <span class="meta-title">Source:</span>
