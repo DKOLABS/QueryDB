@@ -82,6 +82,18 @@ function initializeCollapseExpandButton() {
     button.textContent = allCollapsed ? 'Expand All' : 'Collapse All';
 }
 
+function parseCardJsonList(card, attrName) {
+    const raw = card.getAttribute(attrName);
+    if (raw == null || raw === "") {
+        return [];
+    }
+    try {
+        return JSON.parse(raw);
+    } catch {
+        return [];
+    }
+}
+
 function populateTypeFilter() {
     const typeFilter = document.getElementById("typeFilter");
     const types = new Set();
@@ -111,8 +123,8 @@ function filterAndSearchCards() {
     const availableIndexes = new Set();
 
     cards.forEach(card => {
-        const cardTags = card.dataset.tags.split(" ");
-        const cardIndexes = card.dataset.indexes.split(" ");
+        const cardTags = parseCardJsonList(card, "data-tags");
+        const cardIndexes = parseCardJsonList(card, "data-indexes");
         const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => cardTags.includes(tag));
         const matchesIndexes = selectedIndexes.length === 0 || selectedIndexes.every(index => cardIndexes.includes(index));
         const cardName = card.querySelector(".card-header h2").textContent.toLowerCase();
@@ -182,8 +194,8 @@ function copyCardContentToJson(card) {
     const cardContent = {
         name: card.querySelector(".card-header h2").textContent.trim().replace(/\n/g, ""),
         search: card.querySelector(".search-field").textContent.trim(),
-        tags: card.dataset.tags.split(" "),
-        indexes: card.dataset.indexes.split(" "),
+        tags: parseCardJsonList(card, "data-tags"),
+        indexes: parseCardJsonList(card, "data-indexes"),
         type: card.dataset.type
     };
 
